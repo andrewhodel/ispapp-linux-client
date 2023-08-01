@@ -117,7 +117,7 @@ char *root_port;
 char root_update_delay;
 char *root_wlan_if;
 char *root_collect_key;
-char *root_client_info = "collect-client-3.06";
+char *root_client_info = "collect-client-3.07";
 char *root_hardware_make;
 char *root_hardware_model;
 char *root_hardware_model_number;
@@ -1765,6 +1765,9 @@ int main(int argc, char **argv) {
         mbedtls_ssl_conf_ca_chain(&conf, &cacert, NULL);
         mbedtls_ssl_conf_rng(&conf, mbedtls_ctr_drbg_random, &ctr_drbg);
         mbedtls_ssl_conf_dbg(&conf, my_debug, stdout);
+
+	// timeout
+	mbedtls_ssl_conf_read_timeout(&conf, 5000);
 
         if ((connect_ret = mbedtls_ssl_setup(&ssl, &conf)) != 0) {
             mbedtls_printf(" failed\n  ! mbedtls_ssl_setup returned %d\n\n", connect_ret);
