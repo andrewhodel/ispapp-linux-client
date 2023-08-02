@@ -60,6 +60,7 @@ cd
 cp ispapp-linux-client/mbedtls-2.24.0.tar.gz ./
 tar -xzvf v2.24.0.tar.gz
 cd mbedtls-2.24.0
+make clean
 make
 sudo --preserve-env make install
 
