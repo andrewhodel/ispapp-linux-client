@@ -117,7 +117,7 @@ char *root_port;
 char root_update_delay;
 char *root_wlan_if;
 char *root_collect_key;
-char *root_client_info = "collect-client-3.07";
+char *root_client_info = "collect-client-3.08";
 char *root_hardware_make;
 char *root_hardware_model;
 char *root_hardware_model_number;
@@ -1748,26 +1748,21 @@ int main(int argc, char **argv) {
 
         // printf("Initial GET request (%i):\n\n%s\n\n", strlen(reqString), reqString);
 
-        // start the connection
-        if ((connect_ret = mbedtls_net_connect(&server_fd, root_address, root_port, MBEDTLS_NET_PROTO_TCP)) != 0) {
-            mbedtls_printf(" failed\n  ! mbedtls_net_connect returned %d\n\n", connect_ret);
-            goto reconnect;
-        }
-
-        // ssl config
-        if ((connect_ret = mbedtls_ssl_config_defaults(&conf, MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM, MBEDTLS_SSL_PRESET_DEFAULT)) != 0) {
-            mbedtls_printf(" failed\n  ! mbedtls_ssl_config_defaults returned %d\n\n", connect_ret);
-            goto reconnect;
-        }
-
         // ssl setup
         mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_REQUIRED);
         mbedtls_ssl_conf_ca_chain(&conf, &cacert, NULL);
         mbedtls_ssl_conf_rng(&conf, mbedtls_ctr_drbg_random, &ctr_drbg);
         mbedtls_ssl_conf_dbg(&conf, my_debug, stdout);
 
-	// timeout
+	// timeouts
 	mbedtls_ssl_conf_read_timeout(&conf, 5000);
+	mbedtls_ssl_conf_handshake_timeout(&conf, 1000, 5000);
+
+        // ssl config
+        if ((connect_ret = mbedtls_ssl_config_defaults(&conf, MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM, MBEDTLS_SSL_PRESET_DEFAULT)) != 0) {
+            mbedtls_printf(" failed\n  ! mbedtls_ssl_config_defaults returned %d\n\n", connect_ret);
+            goto reconnect;
+        }
 
         if ((connect_ret = mbedtls_ssl_setup(&ssl, &conf)) != 0) {
             mbedtls_printf(" failed\n  ! mbedtls_ssl_setup returned %d\n\n", connect_ret);
@@ -1780,6 +1775,12 @@ int main(int argc, char **argv) {
         }
 
         mbedtls_ssl_set_bio(&ssl, &server_fd, mbedtls_net_send, mbedtls_net_recv, NULL);
+
+        // start the connection
+        if ((connect_ret = mbedtls_net_connect(&server_fd, root_address, root_port, MBEDTLS_NET_PROTO_TCP, 0)) != 0) {
+            mbedtls_printf(" failed\n  ! mbedtls_net_connect returned %d\n\n", connect_ret);
+            goto reconnect;
+        }
 
         // tls/ssl handshake
         while ((connect_ret = mbedtls_ssl_handshake(&ssl)) != 0) {

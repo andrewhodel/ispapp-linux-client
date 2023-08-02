@@ -34,10 +34,8 @@ ISPApp also provides outage notifications and maintenance/degradation analysis..
 
 * json-c
 * libnl3
-* mbedtls
+* mbedtls (only the version included in this git repository)
 * timeout
-
-This has been tested running on small devices with 4MB of RAM and 16MB of disk space.
 
 # build
 
@@ -53,18 +51,19 @@ export LD_LIBRARY_PATH=/usr/local/lib
 Logout of the shell session and login again to re-parse /etc/profile
 
 ```
+# get ispapp-linux-client source
+cd
+git clone https://github.com/ispapp/ispapp-linux-client
+
 # build and install mbedtls
 cd
-wget https://github.com/ARMmbed/mbedtls/archive/v2.24.0.tar.gz
+cp ispapp-linux-client/mbedtls-2.24.0.tar.gz ./
 tar -xzvf v2.24.0.tar.gz
 cd mbedtls-2.24.0
 make
 sudo --preserve-env make install
 
-# get ispapp-linux-client source
-cd
-git clone https://github.com/ispapp/ispapp-linux-client
-cd ispapp-linux-client
+cd ~/ispapp-linux-client
 make
 ```
 
