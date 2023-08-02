@@ -84,7 +84,7 @@ sudo LD_LIBRARY_PATH=/usr/local/lib ./collect-client monitor.xyzbots.com 8550 et
 
 # license
 
-The project ispapp-linux-client is licensed per the GNU General Public License, version 2
+ispapp-linux-client is licensed MIT
 
 A copy is in the project directory, as a file named LICENSE
 
