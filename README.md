@@ -48,7 +48,11 @@ yum -y install json-c-devel libnl3-devel timeout
 # add to /etc/profile
 export SHARED=1
 export LD_LIBRARY_PATH=/usr/local/lib
+```
 
+Logout of the shell session and login again to re-parse /etc/profile
+
+```
 # build and install mbedtls
 cd
 wget https://github.com/ARMmbed/mbedtls/archive/v2.24.0.tar.gz
@@ -72,9 +76,10 @@ It must be run as root to send ping packets, ping requires a raw network socket 
 
 ```
 cd ispapp-linux-client
-sudo LD_LIBRARY_PATH=/usr/local/lib ./collect-client subdomain.ispapp.co 8550 eth0 "long_host_key" "amazon" "ec2" "amazon linux 2" "nano" "NA" "1602685864" "" ./ /tmp/collect-client-config.json > /dev/null 2>&1 &
+sudo LD_LIBRARY_PATH=/usr/local/lib ./collect-client monitor.xyzbots.com 8550 eth0 "yourkey" "amazon" "ec2" "amazon linux 2" "t2.micro" "NA" "1602685864" "" /home/ec2-user/xyzbots_keys /tmp/collect-client-config.json 2 > /home/ec2-user/collect-client.log 2>&1 &
 
 # you can place the launch command above into a startup script like /etc/rc.local
+# the argument that has the value /home/ec2-user/xyzbots_keys is a directory of CA certificate files
 ```
 
 # license
