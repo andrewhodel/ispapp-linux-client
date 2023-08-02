@@ -34,7 +34,7 @@ ISPApp also provides outage notifications and maintenance/degradation analysis..
 
 * json-c
 * libnl3
-* mbedtls (only the version included in this git repository)
+* mbedtls (only the version included in this git repository works because `mbedtls_net_connect()` had no timeout)
 * timeout
 
 # build

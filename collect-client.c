@@ -117,7 +117,7 @@ char *root_port;
 char root_update_delay;
 char *root_wlan_if;
 char *root_collect_key;
-char *root_client_info = "collect-client-3.08";
+char *root_client_info = "collect-client-3.09";
 char *root_hardware_make;
 char *root_hardware_model;
 char *root_hardware_model_number;
@@ -1777,7 +1777,8 @@ int main(int argc, char **argv) {
         mbedtls_ssl_set_bio(&ssl, &server_fd, mbedtls_net_send, mbedtls_net_recv, NULL);
 
         // start the connection
-        if ((connect_ret = mbedtls_net_connect(&server_fd, root_address, root_port, MBEDTLS_NET_PROTO_TCP, 0)) != 0) {
+	// 5 second timeout
+        if ((connect_ret = mbedtls_net_connect(&server_fd, root_address, root_port, MBEDTLS_NET_PROTO_TCP, 5)) != 0) {
             mbedtls_printf(" failed\n  ! mbedtls_net_connect returned %d\n\n", connect_ret);
             goto reconnect;
         }
